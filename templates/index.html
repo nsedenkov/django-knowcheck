@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+.header
+{
+position:absolute;
+top:0px;
+margin:0px;
+padding:6px 6px 16px 6px;
+width:98%;
+font-family:'arial','serif','verdana';
+font-size:0.9em;
+background-color:#828282;
+color:white;
+}
+.content
+{
+min-height: calc(100vh - 130px);
+}
+.footer
+{
+padding:0 0 6px 0;
+margin:0px;
+width:100%;
+font-family:'arial','serif','verdana';
+font-size:0.9em;
+background-color:#828282;
+color:white;
+}
+#tbl1
+{
+margin-left:auto;
+margin-right:auto;
+margin-top:100px;
+width:25%;
+}
+#tbl1 td
+{
+border-style:solid;
+border-width:8px;
+border-color:white;
+background-color:#828282;
+padding:8px;
+}
+a
+{
+font-family:"Impact" !important;
+font-size:1.4em;
+}
+a:link 
+{
+text-decoration:none;
+color:white;
+outline-style:none;
+border-style:none;
+}
+
+a:visited
+{
+text-decoration:none;
+color:white;
+outline-style:none;
+border-style:none;
+}
+
+a:hover 
+{
+text-decoration:none;
+color:#cbc94a;
+outline-style:none;
+border-style:none;
+}
+
+a:active 
+{
+text-decoration:none;
+color:white;
+outline-style:none;
+border-style:none;
+}
+</style>
+</head>
+<body>
+<div class="header">
+Вы вошли как: <b>{{ user }}</b>
+</div>
+<div class="wrapper">
+<div class="content">
+<table id="tbl1">
+{% if user.is_staff %}
+<tr>
+<td><a href="admin/">Администрирование</a></td>
+</tr>
+{% endif %}
+{% if not user.is_superuser %}
+<tr>
+<td><a href="knowtest/">Тестирование</a></td>
+</tr>
+{% endif %}
+<tr>
+<td><a href="knowtest/results/">Результаты</a></td>
+</tr>
+<tr>
+<td><a href="goodbye/">Выход</a></td>
+</tr>
+</table>
+</div>
+<div class="footer">2015 &copy; Седенков Н.Б., nsedenkov@yandex.ru</div>
+</div>
+</body>
+</html>

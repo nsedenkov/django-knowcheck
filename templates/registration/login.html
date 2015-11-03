@@ -1,0 +1,94 @@
+<html>
+<head>
+<title>Авторизация</title>
+<style type='text/css'>
+#wrap
+{
+padding:10px;
+height:150px;
+border-style:solid;
+border-width:1px;
+margin-left:auto;
+margin-right:auto;
+margin-top:150px;
+width:30%;
+}
+#tbl
+{
+font-family:arial,serif,lucida;
+width:99%;
+border-collapse:collapse;
+}
+#tbl th
+{
+font-family:'arial';
+background-color:#828282;
+padding:2px;
+font-size:1.1em;
+color:white;
+}
+#css td
+{
+font-family:'verdana';
+padding:4px;
+}
+input[type="text"]
+{
+margin:4px;
+padding:2px;
+width:95%;
+}
+input[type="password"]
+{
+margin:4px;
+padding:2px;
+width:95%;
+}
+input[type="submit"]
+{
+font-family:arial,serif,lucida;
+font-size:1.1em;
+padding-right:15px;
+padding-left:15px;
+}
+</style>
+</head>
+<body class="login">
+{% load url from future %}
+
+{% block content %}
+
+{% if form.errors %}
+<script type="text/javascript">
+alert("Неверное имя пользователя и/или пароль");
+</script>
+{% endif %}
+
+<div id="wrap">
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+{% csrf_token %}
+<table id="tbl">
+<tr>
+    <th><h3>Авторизация</h3></th>
+    <th>&nbsp;</th>
+</tr>
+<tr>
+    <td>{{ form.username.label_tag }}</td>
+    <td>{{ form.username }}</td>
+</tr>
+<tr>
+    <td>{{ form.password.label_tag }}</td>
+    <td>{{ form.password }}</td>
+</tr>
+    <td><input type="submit" value="Войти" /></td>
+<tr>
+</tr>
+</table>
+
+<input type="hidden" name="next" value="{{next|escape}}" />
+</form>
+</div>
+
+{% endblock %}
+</body>
+</html>

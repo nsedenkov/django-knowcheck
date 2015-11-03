@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Результаты</title>
+<style type='text/css'>
+#css
+{
+border-collapse:collapse;
+margin-left:auto;
+margin-right:auto;
+width:75%;
+}
+#css th
+{
+font-family:'arial';
+background-color:#828282;
+padding:7px;
+font-size:1.1em;
+border:1px black solid;
+color:white;
+}
+#css td
+{
+font-family:'verdana';
+padding:7px;
+border:1px solid;
+}
+#tbl1
+{
+width:100%;
+}
+#tbl1 td
+{
+padding-right:10px;
+margin:0px;
+}
+.header
+{
+position:absolute;
+top:0px;
+margin:0px;
+padding:6px 6px 6px 6px;
+width:98%;
+font-family:'arial','serif','verdana';
+font-size:0.9em;
+background-color:#828282;
+color:white;
+}
+.wrapper
+{
+margin-top:80px;
+}
+.content
+{
+font-family:'arial','serif','verdana';
+min-height: calc(100vh - 110px);
+}
+.footer
+{
+padding:0 0 6px 0;
+margin:0px;
+width:100%;
+font-family:'arial','serif','verdana';
+font-size:0.9em;
+background-color:#828282;
+color:white;
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="header">
+        <table id="tbl1">
+            <tbody>
+            <tr>
+            <td width="25%" align="left" valign="middle">
+            Вы вошли как <b> {{ user }} </b>
+            </td>
+            <td width="50%" align="left" valign="middle"><h3>Ваши результаты</h3></td>
+            <td width="25%" align="right" valign="middle">
+            <a href="/"><img id="home" onmouseover="document.getElementById('home').src='/static/images/homeact.png'" onmouseout="document.getElementById('home').src='/static/images/homepassive.png'" src="/static/images/homepassive.png" alt="home" height="28" width="33" /></a>
+            </td>
+            </tr>
+            </tdbody>
+        </table>
+    </div>
+    <div class="content">
+{% if res %}
+    <table id="css">
+    <tdbody>
+        <tr>
+            <th width="15%" align="left" valign="middle">
+                Дата, время
+            </th>
+            <th width="70%" align="left" valign="middle">
+                Наименование
+            </th>
+            <th width="15%" align="left" valign="middle">
+                IP-адрес
+            </th>
+        </tr>
+        {% for res_one in res %}
+            <tr>
+                <td>{{ res_one.date }}</td>
+                <td><a href="/knowtest/result/?t_id={{ res_one.t_id }}">{{ res_one.name }}</a></td>
+                <td>{{ res_one.ip }}</td>
+            </tr>
+        {% endfor %}
+    </tdbody>
+    </table>
+{% else %}
+    <h3>Результаты отсутствуют.</h3>
+{% endif %}
+    </div>
+    <div class="footer">2015 &copy; Седенков Н.Б., nsedenkov@yandex.ru</div>
+</div>
+</body>
+</html>

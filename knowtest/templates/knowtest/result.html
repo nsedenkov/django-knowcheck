@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Результаты</title>
+<style type="text/css">
+div
+{
+margin-left:auto;
+margin-right:auto;
+width:80%;
+font-family:'sans-serif';
+}
+table
+{
+border-collapse:collapse;
+width:100%;
+}
+table th
+{
+text-align:left;
+border-bottom:2px solid;
+padding-top:10px;
+padding-bottom:10px;
+}
+table td
+{
+vertical-align:top;
+}
+.ans
+{
+padding-bottom:10px;
+}
+#epg
+{
+text-align:right;
+font-size:0.9em;
+}
+#hdr
+{
+text-align:center;
+}
+#opttbl td
+{
+text-align:left;
+padding:10px;
+}
+.otc1
+{
+width=20%;
+}
+.otc2
+{
+width=15%;
+}
+.otc3
+{
+}
+#org
+{
+padding-top:10px;
+padding-bottom:10px;
+}
+#ftrtbl td
+{
+text-align:left;
+padding-top:10px;
+}
+#undrln
+{
+border-bottom:2px solid;
+}
+</style>
+</head>
+<body>
+<div id="epg">
+<p>Приложение к аттестационному листу</p>
+</div>
+<div id="hdr">
+<h3>Лист тестирования работника</h3>
+</div>
+<div id="org">
+{{ main.org }}
+</div>
+<div id="opt">
+<table id="opttbl">
+<tdbody>
+<tr>
+<td class="otc1">Дата проведения</td>
+<td class="otc2"></td>
+<td class="otc3">{{ main.date }}</td>
+</tr>
+<tr>
+<td class="otc1">ФИО</td>
+<td class="otc2"></td>
+<td class="otc3">{{ main.fio }}</td>
+</tr>
+<tr>
+<td class="otc1">Структурное подразделение</td>
+<td class="otc2"></td>
+<td class="otc3">{{ main.pdrz }}</td>
+</tr>
+<tr>
+<td class="otc1">Должность</td>
+<td class="otc2"></td>
+<td class="otc3">{{ main.dlgn }}</td>
+</tr>
+</tdbody>
+</table>
+</div>
+<div id="tbl">
+<table>
+<tdbody>
+    <tr>
+        <th>Перечень вопросов с вариантами ответов</th>
+        <th>Результат</th>
+    </tr>
+{% for q in q_set %}
+    <tr>
+        <td><b>{{q.qstn}}</b></td>
+        <td>{{q.q_res}}</td>
+    </tr>
+    {% if q.ans %}
+    <tr>
+        <td class="ans">
+    {% for c_one in q.ans %}
+        <ul>
+            <li>{{c_one.txt}}</li>
+        </ul>
+    {% endfor %}
+        </td>
+        <td>&nbsp;</td>
+    </tr>
+    {% else %}
+    <tr>
+        <td class="ans">Варианты ответа не выбраны</td>
+        <td>&nbsp;</td>
+    </tr>
+    {% endif %}
+{% endfor %}
+</tdbody>
+</table>
+</div>
+<br>
+<div id="res">
+<table id="ftrtbl">
+<tr>
+<td>Время тестирования:</td>
+<td>{{ main.btm }} - {{ main.etm }}</td>
+<td></td>
+</tr>
+<tr>
+<td>Количество правильных ответов:</td>
+<td>{{r_cnt}}</td>
+<td></td>
+</tr>
+<tr>
+<td>Общий результат:</td>
+<td>{{tot_res}}%</td>
+<td></td>
+</tr>
+<td>Аттестуемый работник</td>
+<td id="undrln"></td>
+<td>{{ main.fio_srt }}</td>
+</table>
+</div>
+</body>
+</html>
