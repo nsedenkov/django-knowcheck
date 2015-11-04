@@ -10,6 +10,7 @@ from django.shortcuts import render, get_object_or_404, render_to_response
 from django.views import generic
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from .models import Qstn, Choice, Settings, LogMaster, LogDetail, LogSubDetail
 from userprofile.models import UserProfile
 
@@ -45,7 +46,7 @@ def starttest(request):
         s_qstn = []
         valid_qstn = []
         cur_set = Settings.objects.get(pk=request.GET['t_id'])
-        q_lst = Qstn.objects.filter(gid=user_group()).order_by('id')
+        q_lst = Qstn.objects.filter(gid=request.user.userprofile.pdrzd.id).order_by('id')
         for q in q_lst:
             valid_qstn.append(q.id)
         while len(s_qstn) < cur_set.qstn_cnt:
@@ -169,20 +170,33 @@ def finish_test(request):
 
 @login_required
 def show_results(request):
+    tmpl = ('knowtest/allresults.html','knowtest/results.html')
     res = []
-    lm_all = LogMaster.objects.filter(uid=request.user).order_by('-dt')
-    for lm in lm_all:
-        D = {}
-        D['t_id'] = lm.id
-        D['name'] = lm.tst_id.name
-        dtn = timezone.make_naive(lm.dt)
-        D['date'] = '%02i.%02i.%04i %02i:%02i' % (dtn.day, dtn.month, dtn.year, dtn.hour, dtn.minute)
-        D['ip'] = lm.ws
-        res.append(D)
-    if len(res) > 0:
-        return render(request, 'knowtest/results.html', {'res': res})
+    if request.user.is_superuser:
+        lvl = 0
+        usrs = User.objects.all()
+        for usr in usrs:
+            if not usr.is_superuser:
+                D = {}
+                D['id'] = usr.id
+                D['name'] = usr.username
+                D['fio'] = usr.userprofile.sur_name + ' ' + usr.userprofile.first_name[0]+'.'+usr.userprofile.patronimic[0] +'.'
+                res.append(D)
     else:
-        return render(request, 'knowtest/results.html', {})
+        lvl = 1
+        lm_all = LogMaster.objects.filter(uid=request.user).order_by('-dt')
+        for lm in lm_all:
+            D = {}
+            D['t_id'] = lm.id
+            D['name'] = lm.tst_id.name
+            dtn = timezone.make_naive(lm.dt)
+            D['date'] = '%02i.%02i.%04i %02i:%02i' % (dtn.day, dtn.month, dtn.year, dtn.hour, dtn.minute)
+            D['ip'] = lm.ws
+            res.append(D)
+    if len(res) > 0:
+        return render(request, tmpl[lvl], {'res': res})
+    else:
+        return render(request, tmpl[lvl], {})
 
 @login_required
 def show_one_result(request):
@@ -229,3 +243,21 @@ def show_one_result(request):
         return render(request, 'knowtest/result.html', {'main':main, 'q_set':q_set, 'r_cnt':right_count, 'tot_res':tot_res})
     else:
         return render(request, 'knowtest/err404.html')
+
+def ajax_get_res_by_uid(request):
+    if request.is_ajax() and 'u_id' in request.GET and request.GET['u_id']:
+        res = {}
+        lm_all = LogMaster.objects.filter(uid=request.GET['u_id']).order_by('-dt')
+        i = 0
+        for lm in lm_all:
+            D = {}
+            D['t_id'] = lm.id
+            D['name'] = lm.tst_id.name
+            dtn = timezone.make_naive(lm.dt)
+            D['date'] = '%02i.%02i.%04i %02i:%02i' % (dtn.day, dtn.month, dtn.year, dtn.hour, dtn.minute)
+            D['ip'] = lm.ws
+            res[i] = D
+            i += 1
+        return JsonResponse(res)
+    else:
+        return JsonResponse({}, status=400)

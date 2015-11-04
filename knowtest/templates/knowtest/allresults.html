@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Результаты</title>
+<script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/results.css" />
+<style type="text/css">
+.lft
+{
+float:left;
+width:19%;
+border-style:solid;
+margin:0px;
+}
+.rght
+{
+float:right;
+width:79%;
+border-style:solid;
+margin:0px;
+}
+</style>
+<script type="text/javascript">
+function sel_usr(i){
+    $.ajax({
+        url: "/knowtest/getresbyuid/",
+        data: {"u_id": i },
+        type: "GET",
+        dataType: "json",
+        success: function( resp ) {
+            $('.rght').empty();
+            $('.rght').append("<table id=\"restbl\" width=\"100%\"></table>")
+            $.each(resp, function(key, value){
+                $('#restbl').append("<tr><td width=\"20%\">"+value['date']+"</td><td width=\"60%\"><a href=\"/knowtest/result/?t_id="+value['t_id']+"\">"+value['name']+"</td><td width=\"20%\"></a>"+value['ip']+"</td></tr>");
+            });
+        },
+        error: function( xhr, status, errorThrown ) {
+            console.log( "Error: " + errorThrown );
+            console.log( "Status: " + status );
+            console.dir( xhr );
+        },
+        complete: function( xhr, status ) {
+            console.log( "The request is complete!" );
+        }
+    });
+}
+</script>
+</head>
+<body>
+<div class="wrapper">
+    <div class="header">
+        <table id="tbl1">
+            <tbody>
+            <tr>
+            <td width="25%" align="left" valign="middle">
+            Вы вошли как <b> {{ user }} </b>
+            </td>
+            <td width="50%" align="left" valign="middle"><h3>Результаты</h3></td>
+            <td width="25%" align="right" valign="middle">
+            <a href="/"><img id="home" onmouseover="document.getElementById('home').src='/static/images/homeact.png'" onmouseout="document.getElementById('home').src='/static/images/homepassive.png'" src="/static/images/homepassive.png" alt="home" height="28" width="33" /></a>
+            </td>
+            </tr>
+            </tdbody>
+        </table>
+    </div>
+    <div class="content">
+        <div class="lft">
+            <table>
+                {% for res_one in res %}
+                <tr>
+                    <td><a href="#" onclick="sel_usr({{ res_one.id }})">{{ res_one.fio }}</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="rght">
+            <table id="restbl">
+            </table>
+        </div>
+    </div>
+    <div class="footer">2015 &copy; Седенков Н.Б., nsedenkov@yandex.ru</div>
+</div>
+</body>
+</html>

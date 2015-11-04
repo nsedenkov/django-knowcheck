@@ -2,12 +2,20 @@
 <html>
 <head>
 <style type="text/css">
-#tbl1
+#wrap
 {
+padding:10px;
+height:150px;
+border-style:solid;
+border-width:1px;
 margin-left:auto;
 margin-right:auto;
-margin-top:100px;
-width:25%;
+margin-top:150px;
+width:30%;
+}
+#tbl1
+{
+width:100%;
 }
 #lnk
 {
@@ -16,6 +24,7 @@ border-width:8px;
 border-color:white;
 background-color:#828282;
 padding:8px;
+text-align:center;
 }
 #txt
 {
@@ -59,6 +68,7 @@ border-style:none;
 </style>
 </head>
 <body>
+<div id="wrap">
 <table id="tbl1">
 <tr>
 <td id="txt"><h2>Спасибо за визит!</h2></td>
@@ -67,5 +77,6 @@ border-style:none;
 <td id="lnk"><a href="/">Войти вновь</a></td>
 </tr>
 </table>
+</div>
 </body>
 </html>

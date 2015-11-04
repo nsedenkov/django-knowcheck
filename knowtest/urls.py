@@ -13,6 +13,7 @@ urlpatterns = [
                 url(r'^finish/$', views.finish_test, name='finish'),
                 url(r'^results/$', views.show_results, name='results'),
                 url(r'^result/$', views.show_one_result, name='one_result'),
+                url(r'^getresbyuid/$', views.ajax_get_res_by_uid, name='one_result_by_uid'),
                 # ex: /getdetail/?t_id=156
                 url(r'^getdetail/$', views.ajax_send_qstn_first, name='sel_qstns'),
                 # ex: /getsubdetail/?q_id=23
