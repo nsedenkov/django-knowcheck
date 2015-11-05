@@ -180,7 +180,7 @@ def show_results(request):
                 D = {}
                 D['id'] = usr.id
                 D['name'] = usr.username
-                D['fio'] = usr.userprofile.sur_name + ' ' + usr.userprofile.first_name[0]+'.'+usr.userprofile.patronimic[0] +'.'
+                D['fio'] = usr.short_fio
                 res.append(D)
     else:
         lvl = 1
@@ -208,8 +208,8 @@ def show_one_result(request):
         up = UserProfile.objects.get(user_id=lm.uid_id)
         dtn = timezone.make_naive(lm.dt)
         etm = timezone.make_naive(lm.etm)
-        main['fio'] = up.sur_name + ' ' + up.first_name + ' ' + up.patronimic
-        main['fio_srt'] = up.sur_name + ' ' + up.first_name[0] + '.' + up.patronimic[0]+'.'
+        main['fio'] = up.full_fio
+        main['fio_srt'] = up.short_fio
         main['org'] = up.pdrzd.orgnz.full_name
         main['pdrz'] = up.pdrzd.name
         main['dlgn'] = up.position

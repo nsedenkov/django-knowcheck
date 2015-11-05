@@ -34,6 +34,25 @@ class UserProfile(models.Model):
 
     def __unicode__(self):
         return self.user.username
+        
+    def _get_short_fio(self):
+        res = '<User unnamed>'
+        if self.sur_name <> '' and self.first_name <> '':
+            res = self.sur_name + ' ' + self.first_name[0] + '.'
+            if self.patronimic <> '':
+                res = res + self.patronimic[0] + '.'
+        return res
+        
+    def _get_full_fio(self):
+        res = '<User unnamed>'
+        if self.sur_name <> '' and self.first_name <> '':
+            res = self.sur_name + ' ' + self.first_name
+            if self.patronimic <> '':
+                res = res + ' ' + self.patronimic
+        return res
+        
+    full_fio = property(_get_full_fio)
+    short_fio = property(_get_short_fio)
 
     class Meta:
         verbose_name = u'Профиль'
