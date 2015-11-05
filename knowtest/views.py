@@ -177,10 +177,11 @@ def show_results(request):
         usrs = User.objects.all()
         for usr in usrs:
             if not usr.is_superuser:
+                up = UserProfile.objects.get(user_id=usr.id)
                 D = {}
                 D['id'] = usr.id
                 D['name'] = usr.username
-                D['fio'] = usr.short_fio
+                D['fio'] = up.short_fio
                 res.append(D)
     else:
         lvl = 1
