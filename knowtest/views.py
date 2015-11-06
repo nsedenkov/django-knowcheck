@@ -39,9 +39,23 @@ def ajax_send_test_by_id(request):
 
 @login_required
 def starttest(request):
-    if 't_id' in request.GET and request.GET['t_id']:
-        # проверить, есть ли незавершенное тестирование
-        #log_m = LogMaster.objects.filter(pk=u_id)
+
+    def find_unfin():
+        res = None
+        d = datetime.date(2000,1,1)
+        t = datetime.time(0,0)
+        begtm = datetime.datetime.combine(d,t)
+        lms = LogMaster.ufobjects.filter(uid=request.user.id).order_by('dt')
+        dtn = timezone.now()
+        if lms.count() > 0:
+            # Для крайнего случая - если "зависших" тестов более 1
+            for lm in lms:
+                if (dtn < timezone.make_naive(lm.dt) + lm.tst_id.max_time) and (lm.dt > begtm):
+                    res = lm.id
+                    begtm = lm.dt
+        return res
+        
+    def make_new():
         # Список для id выбранных вопросов - selected questions
         s_qstn = []
         valid_qstn = []
@@ -58,7 +72,14 @@ def starttest(request):
         for x in s_qstn:
             ld = LogDetail(mstr_id=lm, qstn=Qstn.objects.get(pk=x))
             ld.save()
-        return HttpResponseRedirect('/knowtest/process/?t_id=%s' % lm.id)
+        return lm.id
+
+    if 't_id' in request.GET and request.GET['t_id']:
+        # проверить, есть ли незавершенное тестирование
+        res = find_unfin()
+        if res is None:
+            res = make_new()
+        return HttpResponseRedirect('/knowtest/process/?t_id=%s' % res)
     else:
         # Вернуть на index.html с сообщением об ошибке
         return render_to_response('')

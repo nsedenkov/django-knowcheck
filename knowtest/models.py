@@ -38,6 +38,10 @@ class Choice(models.Model):
     def __unicode__(self):
         return unicode(self.c_text)
 
+class UnFinManager(models.Manager):
+    def get_query_set(self):
+        return super(UnFinManager, self).get_query_set().filter(etm__isnull=True)
+        
 # Мастер-запись для сеанса тестирования
 class LogMaster(models.Model):
     tst_id = models.ForeignKey(Settings)
@@ -45,6 +49,9 @@ class LogMaster(models.Model):
     dt = models.DateTimeField("Testing date")
     etm = models.DateTimeField("End time", null=True)
     ws = models.GenericIPAddressField("IP", unpack_ipv4=True)
+    # Менеджеры
+    objects = models.Manager()
+    ufobjects = UnFinManager()
 
 # Список вопросов, выбранных для сеанса
 class LogDetail(models.Model):
