@@ -44,17 +44,17 @@ def starttest(request):
         res = None
         d = datetime.date(2000,1,1)
         t = datetime.time(0,0)
-        begtm = datetime.datetime.combine(d,t)
-        lms = LogMaster.ufobjects.filter(uid=request.user.id).order_by('dt')
+        begtm = timezone.make_aware(datetime.datetime.combine(d,t))
+        lms = LogMaster.ufobjects.filter(etm__isnull=True).filter(uid=request.user.id).order_by('dt')
         dtn = timezone.now()
         if lms.count() > 0:
             # Для крайнего случая - если "зависших" тестов более 1
             for lm in lms:
-                if (dtn < timezone.make_naive(lm.dt) + lm.tst_id.max_time) and (lm.dt > begtm):
+                if (dtn < lm.dt + lm.tst_id.max_time) and (lm.dt > begtm):
                     res = lm.id
                     begtm = lm.dt
         return res
-        
+
     def make_new():
         # Список для id выбранных вопросов - selected questions
         s_qstn = []
